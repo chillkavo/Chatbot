@@ -1,24 +1,25 @@
 package com.chatbot.backend.controller;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.chatbot.backend.dto.MensajeRequest;
 import com.chatbot.backend.dto.MensajeResponse;
+import com.chatbot.backend.service.ChatbotService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/chatbot")
 public class ChatbotController {
 
-    @PostMapping
-    public MensajeResponse responderPregunta(@RequestBody MensajeRequest request) {
-        String mensaje = request.getMensaje();
-        
-        // Aquí puedes conectar luego con lógica más compleja
-        String respuesta = "Respuesta a tu mensaje: " + mensaje;
+    private final ChatbotService chatbotService;
 
+    @Autowired
+    public ChatbotController(ChatbotService chatbotService) {
+        this.chatbotService = chatbotService;
+    }
+
+    @PostMapping
+    public MensajeResponse recibirMensaje(@RequestBody MensajeRequest request) {
+        String respuesta = chatbotService.obtenerRespuesta(request.getMensaje());
         return new MensajeResponse(respuesta);
     }
 }
