@@ -6,6 +6,8 @@ import com.chatbot.backend.service.ChatbotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/chatbot")
 public class ChatbotController {
@@ -20,6 +22,23 @@ public class ChatbotController {
     @PostMapping
     public MensajeResponse recibirMensaje(@RequestBody MensajeRequest request) {
         String respuesta = chatbotService.obtenerRespuesta(request.getMensaje());
-        return new MensajeResponse(respuesta);
+        chatbotService.registrarConversacion(request.getMensaje(), respuesta);
+        return new MensajeResponse(request.getMensaje(), respuesta);
+    }
+
+    @PostMapping("/registrar") // Endpoint para registrar nuevas preguntas/respuestas
+    public String registrarPreguntaYRespuesta(@RequestBody MensajeRequest request) {
+        // Solo si el usuario es admin se permite registrar preguntas
+        if (request.isAdmin()) {
+            chatbotService.registrarPreguntaYRespuesta(request.getMensaje(), request.getRespuesta());
+            return "Pregunta y respuesta registradas exitosamente.";
+        } else {
+            return "No autorizado para registrar nuevas preguntas.";
+        }
+    }
+
+    @GetMapping("/logs") // Endpoint para obtener el historial de conversaciones
+    public List<MensajeResponse> obtenerLogs() {
+        return chatbotService.obtenerConversaciones();
     }
 }

@@ -1,10 +1,24 @@
 package com.chatbot.backend.dto;
 
-public class MensajeResponse {
-    private String respuesta;
+import java.time.LocalDateTime;
 
-    public MensajeResponse(String respuesta) {
+public class MensajeResponse {
+    private String preguntaOriginal;
+    private String respuesta;
+    private LocalDateTime timestamp;
+
+    public MensajeResponse(String preguntaOriginal, String respuesta) {
+        this.preguntaOriginal = preguntaOriginal;
         this.respuesta = respuesta;
+        this.timestamp = LocalDateTime.now();
+    }
+
+    public String getPreguntaOriginal() {
+        return preguntaOriginal;
+    }
+
+    public void setPreguntaOriginal(String preguntaOriginal) {
+        this.preguntaOriginal = preguntaOriginal;
     }
 
     public String getRespuesta() {
@@ -13,5 +27,13 @@ public class MensajeResponse {
 
     public void setRespuesta(String respuesta) {
         this.respuesta = respuesta;
+    }
+
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
     }
 }
